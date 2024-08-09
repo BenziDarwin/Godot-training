@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dnb5bces2vgnx"]
+[gd_scene load_steps=7 format=3 uid="uid://dnb5bces2vgnx"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_rpjyk"]
 [ext_resource type="PackedScene" uid="uid://dxylorql5xsnj" path="res://player.tscn" id="1_yct65"]
 [ext_resource type="PackedScene" uid="uid://kteckwjdne6n" path="res://Mob.tscn" id="2_joacq"]
+[ext_resource type="FontFile" uid="uid://cf2ncu5oetqp2" path="res://fonts/Xolonium-Regular.ttf" id="4_dk7y6"]
+[ext_resource type="Script" path="res://HUD.cs" id="4_vpskg"]
 
 [sub_resource type="Curve2D" id="Curve2D_4x4qv"]
 _data = {
@@ -15,6 +17,7 @@ script = ExtResource("1_rpjyk")
 MobScene = ExtResource("2_joacq")
 
 [node name="Player" parent="." instance=ExtResource("1_yct65")]
+visible = false
 
 [node name="MobTimer" type="Timer" parent="."]
 wait_time = 0.5
@@ -33,5 +36,61 @@ curve = SubResource("Curve2D_4x4qv")
 
 [node name="SpawnLocation" type="PathFollow2D" parent="MobPath"]
 position = Vector2(-5, -1)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+script = ExtResource("4_vpskg")
+
+[node name="ScoreLabel" type="Label" parent="HUD"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 78.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("4_dk7y6")
+theme_override_font_sizes/font_size = 64
+text = "0"
+
+[node name="Message" type="Label" parent="HUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -120.0
+offset_right = 240.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_dk7y6")
+theme_override_font_sizes/font_size = 64
+text = "Dodge the creeps"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="StartButton" type="Button" parent="HUD"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -140.0
+offset_right = 100.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("4_dk7y6")
+theme_override_font_sizes/font_size = 64
+text = "Start"
+
+[node name="MessageTimer" type="Timer" parent="HUD"]
+wait_time = 2.0
+one_shot = true
 
 [connection signal="Hit" from="Player" to="." method="game_over"]
