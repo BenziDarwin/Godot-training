@@ -45,7 +45,7 @@ position = Vector2(221, 394)
 script = ExtResource("1_ji5qg")
 metadata/_edit_group_ = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="Movement" type="AnimatedSprite2D" parent="."]
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_qh4u4")
 animation = &"walk"

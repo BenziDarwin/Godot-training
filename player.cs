@@ -2,15 +2,26 @@ using Godot;
 
 public partial class Player : Area2D
 {
-	[Export]
-	public int Speed { get; set; } = 400; // How fast the player will move (pixels/sec).
+	[Signal]
+	public delegate void HitEventHandler();
 
-	public Vector2 ScreenSize; // Size of the game window.
+	[Export]
+	public int Speed { get; set; } = 400;
+
+
+	public Vector2 ScreenSize;
 
 	public override void _Ready()
 	{
 		Hide();
 		ScreenSize = GetViewportRect().Size;
+	}
+
+	public void Start(Vector2 position)
+	{
+		Position = position;
+		Show();
+		GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
 	}
 
 	public override void _Process(double delta)
@@ -37,7 +48,7 @@ public partial class Player : Area2D
 			velocity.Y -= 1;
 		}
 
-		var animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		var animatedSprite2D = GetNode<AnimatedSprite2D>("Movement");
 
 		if (velocity.Length() > 0)
 		{
@@ -48,7 +59,7 @@ public partial class Player : Area2D
 		{
 			animatedSprite2D.Stop();
 		}
-		
+
 		Position += velocity * (float)delta;
 		Position = new Vector2(
 			x: Mathf.Clamp(Position.X, 0, ScreenSize.X),
@@ -59,7 +70,6 @@ public partial class Player : Area2D
 		{
 			animatedSprite2D.Animation = "walk";
 			animatedSprite2D.FlipV = false;
-			// See the note below about the following boolean assignment.
 			animatedSprite2D.FlipH = velocity.X < 0;
 		}
 		else if (velocity.Y != 0)
@@ -69,5 +79,12 @@ public partial class Player : Area2D
 		}
 	}
 
+	private void OnBodyEntered(Node2D body)
+	{
+		Hide(); // Player disappears after being hit.
+		EmitSignal(SignalName.Hit);
+		// Must be deferred as we can't change physics properties on a physics callback.
+		GetNode<CollisionShape2D>("CollisionShape2D").SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+	}
 }
 
