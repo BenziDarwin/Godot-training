@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://dnb5bces2vgnx"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_rpjyk"]
-[ext_resource type="PackedScene" uid="uid://dxylorql5xsnj" path="res://player.tscn" id="1_yct65"]
+[ext_resource type="PackedScene" uid="uid://dxylorql5xsnj" path="res://Player.tscn" id="1_yct65"]
 [ext_resource type="PackedScene" uid="uid://kteckwjdne6n" path="res://Mob.tscn" id="2_joacq"]
 [ext_resource type="FontFile" uid="uid://cf2ncu5oetqp2" path="res://fonts/Xolonium-Regular.ttf" id="4_dk7y6"]
 [ext_resource type="Script" path="res://HUD.cs" id="4_vpskg"]
@@ -17,7 +17,6 @@ script = ExtResource("1_rpjyk")
 MobScene = ExtResource("2_joacq")
 
 [node name="Player" parent="." instance=ExtResource("1_yct65")]
-visible = false
 
 [node name="MobTimer" type="Timer" parent="."]
 wait_time = 0.5
@@ -34,7 +33,7 @@ position = Vector2(240, 450)
 [node name="MobPath" type="Path2D" parent="."]
 curve = SubResource("Curve2D_4x4qv")
 
-[node name="SpawnLocation" type="PathFollow2D" parent="MobPath"]
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
 position = Vector2(-5, -1)
 
 [node name="HUD" type="CanvasLayer" parent="."]
@@ -93,4 +92,10 @@ text = "Start"
 wait_time = 2.0
 one_shot = true
 
-[connection signal="Hit" from="Player" to="." method="game_over"]
+[connection signal="Hit" from="Player" to="." method="GameOver"]
+[connection signal="timeout" from="MobTimer" to="." method="OnMobTimerTimeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="OnScoreTimerTimeout"]
+[connection signal="timeout" from="StartTimer" to="." method="OnStartTimerTimeout"]
+[connection signal="StartGame" from="HUD" to="." method="NewGame"]
+[connection signal="pressed" from="HUD/StartButton" to="HUD" method="OnStartButtonPressed"]
+[connection signal="timeout" from="HUD/MessageTimer" to="HUD" method="OnMessageTimerTimeout"]
