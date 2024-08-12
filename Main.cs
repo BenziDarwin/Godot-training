@@ -14,11 +14,15 @@ public partial class Main : Node
 		GetNode<Timer>("MobTimer").Stop();
 		GetNode<Timer>("ScoreTimer").Stop();
 		GetNode<HUD>("HUD").ShowGameOver();
+		  GetNode<AudioStreamPlayer>("Music").Stop();
+	GetNode<AudioStreamPlayer>("DeathSound").Play();
 	}
 
 	// Function to start a new game.
 	public void NewGame()
 	{
+		GetNode<AudioStreamPlayer>("Music").Play();
+		GetTree().CallGroup("mobs", Node.MethodName.QueueFree);
 		_score = 0;
 		var player = GetNode<Player>("Player");
 		var startPosition = GetNode<Marker2D>("PlayerPosition");
